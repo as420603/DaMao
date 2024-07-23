@@ -8,6 +8,8 @@ app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads'
 DESTINATION_FOLDER = "D:\\Project_AI\\Whisper_Test\\venv\\final_project\\audio_input"  # 替換為你的目標資料夾
 AUDIO_OUTPUT_FOLDER = "D:\\Project_AI\\Whisper_Test\\venv\\final_project\\audio_output"  # 替換為你的音頻輸出資料夾
+TRANSCRIPTION_FILE_PATH = "D:\\Project_AI\\Whisper_Test\\venv\\final_project\\txt_to_DaMao\\transcription.txt"  # 替換為你的文字檔案路徑
+RESPONSE_FILE_PATH = "D:\\Project_AI\\Whisper_Test\\venv\\final_project\\txt_to_TTS\\Da_Mao_response.txt"  # 替換為你的回覆文字檔案路徑
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(DESTINATION_FOLDER, exist_ok=True)
@@ -15,7 +17,20 @@ os.makedirs(AUDIO_OUTPUT_FOLDER, exist_ok=True)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    # 讀取文字檔案內容
+    try:
+        with open(TRANSCRIPTION_FILE_PATH, 'r', encoding='utf-8') as file:
+            transcription_text = file.read()
+    except FileNotFoundError:
+        transcription_text = "找不到轉換文字檔案。"
+
+    try:
+        with open(RESPONSE_FILE_PATH, 'r', encoding='utf-8') as file:
+            response_text = file.read()
+    except FileNotFoundError:
+        response_text = "找不到回覆文字檔案。"
+
+    return render_template('index.html', transcription_text=transcription_text, response_text=response_text)
 
 @app.route('/upload', methods=['POST'])
 def upload_file():

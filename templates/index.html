@@ -8,107 +8,32 @@
     <script src="https://cdn.jsdelivr.net/gh/dylanNew/live2d/webgl/Live2D/lib/live2d.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pixi.js@6.5.2/dist/browser/pixi.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display/dist/index.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <h1>錄音功能示範</h1>
-    <button id="recordButton">開始錄音</button>
-    <button id="stopButton" disabled>停止錄音</button>
-    <button id="speakButton" disabled>播放音頻並同步口型</button>
-    <audio id="audioPlayback" controls></audio>
-    <canvas id="canvas" width="500" height="500"></canvas>
-    <script>
-        let recordButton = document.getElementById('recordButton');
-        let stopButton = document.getElementById('stopButton');
-        let speakButton = document.getElementById('speakButton');
-        let audioPlayback = document.getElementById('audioPlayback');
-        let mediaRecorder;
-        let audioChunks = [];
-
-        recordButton.addEventListener('click', async () => {
-            let stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorder = new MediaRecorder(stream);
-
-            mediaRecorder.ondataavailable = event => {
-                audioChunks.push(event.data);
-            };
-
-            mediaRecorder.onstop = async () => {
-                let audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                let audioUrl = URL.createObjectURL(audioBlob);
-                audioPlayback.src = audioUrl;
-
-                // 將錄音文件上傳到伺服器
-                let formData = new FormData();
-                formData.append('audio', audioBlob, 'recording.wav');
-
-                let response = await fetch('/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (response.ok) {
-                    window.location.reload();  // 成功上傳後刷新頁面
-                } else {
-                    alert('上傳失敗');
-                }
-            };
-
-            mediaRecorder.start();
-            recordButton.disabled = true;
-            stopButton.disabled = false;
-        });
-
-        stopButton.addEventListener('click', () => {
-            mediaRecorder.stop();
-            recordButton.disabled = false;
-            stopButton.disabled = true;
-        });
-
-        // 初始化Live2D虛擬人物
-        const cubism2Model = "https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/test/assets/shizuku/shizuku.model.json";
-        let model2;
-
-        (async function main() {
-            const app = new PIXI.Application({
-                view: document.getElementById("canvas"),
-                autoStart: true,
-                resizeTo: window
-            });
-
-            model2 = await PIXI.live2d.Live2DModel.from(cubism2Model);
-            app.stage.addChild(model2);
-
-            model2.scale.set(0.3);
-
-            // 激活播放音頻按鈕
-            speakButton.disabled = false;
-        })();
-
-        speakButton.addEventListener('click', async () => {
-            const audio_link = "/audio/response.mp3"; // 使用Flask路由提供的音頻鏈接
-
-            // 確保model2已經初始化
-            if (model2) {
-                // 播放音頻
-                const audio = new Audio(audio_link);
-                audio.volume = 1;
-
-                // 使用motion方法播放音頻和口型同步
-                model2.motion("default", 0, 2, {
-                    sound: audio_link,
-                    volume: 1,
-                    expression: 4, // 可以根據需要設置不同的表情
-                    onFinish: () => {console.log("Voiceline and Animation is over")},
-                    onError: (err) => {console.log("Error: "+err)},
-                    crossOrigin: "anonymous"
-                });
-
-                // 播放音頻
-                audio.play();
-            } else {
-                alert('Model not initialized');
-            }
-        });
-    </script>
+    <div id="container">
+        <h1>Da_Mao聊天室</h1>
+        <div id="chatBox">
+            <div id="messages">
+                <!-- 聊天訊息會動態添加在這裡 -->
+                <div class="message left">
+                    <strong>轉換文字：</strong>
+                    <p>{{ transcription_text }}</p>
+                </div>
+                <div class="message right">
+                    <strong>回覆內容：</strong>
+                    <p>{{ response_text }}</p>
+                </div>
+            </div>
+            <div id="controls">
+                <button id="recordButton" title="開始錄音"><i class="fas fa-microphone"></i></button>
+                <button id="stopButton" disabled title="停止錄音"><i class="fas fa-stop"></i></button>
+                <button id="speakButton" disabled title="播放音頻並同步口型"><i class="fas fa-volume-up"></i></button>
+            </div>
+        </div>
+    </div>
+    <canvas id="canvas" width="300" height="300"></canvas>
 </body>
 </html>
