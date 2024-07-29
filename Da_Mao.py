@@ -3,8 +3,6 @@ import torch
 import os
 import ollama
 from gtts import gTTS
-import tempfile
-from pydub import AudioSegment
 
 def transcribe_audio(file_path, model_name="medium", use_cuda=True):
     # 檢查是否有可用的 CUDA 設備
@@ -26,12 +24,17 @@ if __name__ == "__main__":
 
     # 設置輸出資料夾路徑
     output_folder = r"D:\Project_AI\Whisper_Test\venv\final_project\audio_output"  # 這是你想保存音頻檔案的資料夾路徑
+    RESPONSE_FILE_PATH = r"D:\Project_AI\Whisper_Test\venv\final_project\txt_to_TTS\Da_Mao_response.txt"  # 替換為你的回覆文字檔案路徑
+    TRANSCRIPTION_FILE_PATH = r"D:\Project_AI\Whisper_Test\venv\final_project\txt_to_DaMao\transcription.txt" # 替換為語音轉文字檔案路徑
 
     if os.path.exists(audio_file_path):
         # 語音轉文字
         transcription = transcribe_audio(audio_file_path, model_name="medium", use_cuda=True)
-        print("轉寫結果：",transcription)
-        
+        print("轉寫結果：", transcription)
+
+        # 將 語音轉文字的回覆保存到指定文件
+        with open(TRANSCRIPTION_FILE_PATH, "w", encoding="utf-8") as file:
+            file.write(transcription)
         
         # 使用 Ollama 生成文本回覆
         response = ollama.chat(
@@ -49,6 +52,10 @@ if __name__ == "__main__":
         # 打印 Big_Mao 的回覆
         print("Big_Mao 的回覆: ", output)
 
+        # 將 Big_Mao 的回覆保存到指定文件
+        with open(RESPONSE_FILE_PATH, "w", encoding="utf-8") as file:
+            file.write(output)
+        
         # 將回覆轉換為語音並保存到指定資料夾
         if output:
             tts = gTTS(text=output, lang='zh-tw')
