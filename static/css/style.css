@@ -12,7 +12,7 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: 50%; /* 角色畫面佔滿畫面的左半邊 */
+    width: 100%; /* 角色畫面佔滿畫面的左半邊 */
     height: 100vh; /* 高度佔滿視口 */
     z-index: 1; /* 角色畫面層級 */
     background-color: black; /* 設定角色畫面背景色為黑色 */
@@ -26,7 +26,7 @@ body {
     height: 100vh; /* 高度佔滿視口 */
     background: rgba(255, 255, 255, 0.8); /* 淡白色背景 */
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5); /* 右側陰影 */
-    z-index: 1; /* 確保容器層級在角色畫面之上 */
+    z-index: 2; /* 確保容器層級在角色畫面之上 */
     display: flex;
     flex-direction: column;
 }

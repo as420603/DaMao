@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let mediaRecorder;
     let audioChunks = [];
 
+    // 每 1 秒更新一次
     function fetchUpdates() {
         fetch('/get_updates')
             .then(response => response.json())
@@ -16,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => console.error('Error fetching updates:', error));
     }
 
-    setInterval(fetchUpdates, 10000); // 每 10 秒更新一次
+    setInterval(fetchUpdates, 1000);
 
     recordButton.addEventListener('click', async () => {
         let stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -31,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let audioUrl = URL.createObjectURL(audioBlob);
             audioPlayback.src = audioUrl;
 
-            // 將錄音文件上傳到伺服器
+            // 将录音文件上传到服务器
             let formData = new FormData();
             formData.append('audio', audioBlob, 'recording.wav');
 
@@ -41,9 +42,21 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.ok) {
-                window.location.reload();  // 成功上傳後刷新頁面
+                // 上传成功后触发 DaMao.py 处理
+                let processResponse = await fetch('/process_audio', {
+                    method: 'POST'
+                });
+
+                if (processResponse.ok) {
+                    console.log('音频处理成功');
+                } else {
+                    alert('音频处理失败');
+                }
+                
+                // 刷新页面以显示处理结果
+                window.location.reload();
             } else {
-                alert('上傳失敗');
+                alert('上传失败');
             }
         };
 
@@ -58,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
         stopButton.disabled = true;
     });
 
-    // 初始化 Live2D 虛擬人物
+    // 初始化 Live2D 虚拟人物
     const cubism2Model = "https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/test/assets/shizuku/shizuku.model.json";
     let model2;
 
@@ -72,35 +85,35 @@ document.addEventListener('DOMContentLoaded', () => {
         model2 = await PIXI.live2d.Live2DModel.from(cubism2Model);
         app.stage.addChild(model2);
 
-        // 設定模型位置和縮放
-        model2.position.set(app.renderer.width / 3, app.renderer.height / 2); // 左 1/3 處
-        model2.anchor.set(0.5, 0.5); // 設定錨點為中心
+        // 设置模型位置和缩放
+        model2.position.set(app.renderer.width / 3, app.renderer.height / 2); // 左 1/3 处
+        model2.anchor.set(0.5, 0.5); // 设置锚点为中心
         model2.scale.set(0.3);
 
-        // 啟用播放音頻按鈕
+        // 启用播放音频按钮
         speakButton.disabled = false;
     })();
 
     speakButton.addEventListener('click', async () => {
-        const audio_link = "/audio/response.mp3"; // 使用 Flask 路由提供的音頻鏈接
+        const audio_link = "/audio/response.mp3"; // 使用 Flask 路由提供的音频链接
 
-        // 確保 model2 已初始化
+        // 确保 model2 已初始化
         if (model2) {
-            // 播放音頻
+            // 播放音频
             const audio = new Audio(audio_link);
             audio.volume = 1;
 
-            // 使用 motion 方法播放音頻和口型同步
+            // 使用 motion 方法播放音频和口型同步
             model2.motion("default", 0, 2, {
                 sound: audio_link,
                 volume: 1,
-                expression: 4, // 可以根據需要設定不同的表情
+                expression: 4, // 可以根据需要设置不同的表情
                 onFinish: () => { console.log("Voiceline and Animation is over") },
                 onError: (err) => { console.log("Error: " + err) },
                 crossOrigin: "anonymous"
             });
 
-            // 播放音頻
+            // 播放音频
             audio.play();
         } else {
             alert('Model not initialized');
