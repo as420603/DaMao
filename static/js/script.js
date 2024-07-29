@@ -6,6 +6,18 @@ document.addEventListener('DOMContentLoaded', () => {
     let mediaRecorder;
     let audioChunks = [];
 
+    function fetchUpdates() {
+        fetch('/get_updates')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('transcription_text').textContent = data.transcription_text;
+                document.getElementById('response_text').textContent = data.response_text;
+            })
+            .catch(error => console.error('Error fetching updates:', error));
+    }
+
+    setInterval(fetchUpdates, 10000); // 每 10 秒更新一次
+
     recordButton.addEventListener('click', async () => {
         let stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         mediaRecorder = new MediaRecorder(stream);
