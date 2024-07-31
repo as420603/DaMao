@@ -12,23 +12,23 @@ Da_Mao(大毛導覽員)
 
 ## 設置虛擬環境
 
-1.創建虛擬環境：
-     ```bash
+- 1.創建虛擬環境：
+    
     python -m venv venv
-     ```
-2.激活虛擬環境：
+   
+- 2.激活虛擬環境：
 
     venv\Scripts\activate
 
-3.安裝依賴項：
+- 3.安裝依賴項：
 
     pip install -r requirements.txt
 
-4.進入連結下載訓練好的大毛模型 ： unsloth.Q4_K_M.gguf
+- 4.進入連結下載訓練好的大毛模型 ： unsloth.Q4_K_M.gguf
 
   https://drive.google.com/file/d/1WAR6o36HQU3QffMxtAjpiFgodg28mTke/view?usp=drive_link
 
-5.進入專案資料夾並開啟終端機執行以下程式碼
+- 5.進入專案資料夾並開啟終端機執行以下程式碼
 
   ollama create Big_Mao -f Modelfile
 
