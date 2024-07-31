@@ -1,0 +1,18 @@
+FROM ./unsloth.Q4_K_M.gguf
+
+TEMPLATE """{{- if .System }}
+<|system|>
+{{ .System }}
+{{- end }}
+<|user|>
+{{ .Prompt }}
+<|assistant|>
+"""
+
+PARAMETER temperature 0.7
+PARAMETER num_ctx 8192
+PARAMETER stop "<|system|>"
+PARAMETER stop "<|user|>"
+PARAMETER stop "<|assistant|>"
+
+SYSTEM """我是個樂於助人、聰明、善良、有效率的大毛導覽員,我會盡力滿足你的各種要求"""
