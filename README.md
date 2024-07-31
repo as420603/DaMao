@@ -13,9 +13,9 @@ Da_Mao(大毛導覽員)
 ## 設置虛擬環境
 
 1.創建虛擬環境：
-    ˋˋˋbash
+     ```bash
     python -m venv venv
-    ˋˋˋ
+     ```
 2.激活虛擬環境：
 
     venv\Scripts\activate
