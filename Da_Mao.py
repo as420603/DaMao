@@ -47,7 +47,7 @@ if __name__ == "__main__":
         # 使用 Ollama 生成文本回覆
         try:
             response = ollama.chat(
-                model='Big_Mao:latest', #指定我們訓練好的model_name 
+                model='Da_Mao:latest ', #指定我們訓練好的model_name 
                 messages=[{'role': 'user', 'content': transcription}]
             )
             

@@ -3,9 +3,10 @@ import time
 import shutil
 import subprocess
 from flask import Flask, request, jsonify, send_from_directory, render_template
-
+from flask_cors import CORS
 # 初始化 Flask 應用
 app = Flask(__name__)
+CORS(app)
 
 # 設置檔案儲存路徑
 UPLOAD_FOLDER = 'uploads'
