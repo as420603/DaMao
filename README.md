@@ -8,7 +8,7 @@ Da_Mao(大毛導覽員)
 
 ## 安裝說明
 
-- git clone https://github.com/as420603/DaMao.git
+ git clone https://github.com/as420603/DaMao.git
 
 ## 設置虛擬環境
 
