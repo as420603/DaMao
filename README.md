@@ -6,42 +6,6 @@ Da_Mao(大毛導覽員)
 
 此專案的目標開發出一個大毛導覽人員,可以放在特定場域(ex:1.5旗艦場館)進行導覽,當今天有客人來,他可以進行場館導覽並與客人互動、回答問題、販售票卷。
 
-
-## 專案結構
-
-簡要說明專案目錄結構。
-
-project-root/
-│
-├── audio_input
-│   ├── recording.wav
-│
-├── audio_output
-│   ├── response.mp3
-│
-├── static/
-│   ├── css
-│   │   ├── style.css
-│   │
-│   ├── js
-│   │   ├── script.js
-│
-├── templates/
-│   ├── index.html
-│
-├── txt_to_DaMao
-│   ├── transcription.txt
-│
-├── txt_to_TTS
-│   ├── Da_Mao_response.txt
-│
-├── uploads/
-│
-├── app.py
-├── Da_Mao.py
-├── requirements.txt
-├── README.md
-
 ## 安裝說明
 
 - git clone https://github.com/as420603/DaMao.git
