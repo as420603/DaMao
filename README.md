@@ -23,6 +23,11 @@ Da_Mao(大毛導覽員)
 
     pip install -r requirements.txt
 
+- 4.進入連結下載訓練好的大毛模型 ： unsloth.Q4_K_M.gguf
+
+  https://drive.google.com/file/d/1WAR6o36HQU3QffMxtAjpiFgodg28mTke/view?usp=drive_link
+
+
 ## 全局環境訊息
 
 - python version ： 3.12.4
