@@ -8,20 +8,31 @@ Da_Mao(大毛導覽員)
 
 ## 安裝說明
 
-- git clone https://github.com/as420603/DaMao.git
+ git clone https://github.com/as420603/DaMao.git
 
 ## 設置虛擬環境
+
 - 1.創建虛擬環境：
     
     python -m venv venv
-
+   
 - 2.激活虛擬環境：
 
     venv\Scripts\activate
 
 - 3.安裝依賴項：
-
+   
     pip install -r requirements.txt
+    
+- 4.進入連結下載訓練好的大毛模型 ： unsloth.Q4_K_M.gguf
+
+  https://drive.google.com/file/d/1WAR6o36HQU3QffMxtAjpiFgodg28mTke/view?usp=drive_link
+
+- 5.進入專案資料夾並開啟終端機執行以下程式碼
+
+  ollama create Dig_Mao -f Modelfile
+
+
 
 ## 全局環境訊息
 
@@ -41,9 +52,11 @@ Da_Mao(大毛導覽員)
 
 ## 使用說明
 
-- 開啟終端機然後進入你的專案資料夾位置,並執行app.py這個檔案
+- 1. 進入專案資料夾並開啟終端機執行以下程式碼
 
-- python app.py 
+  python app.py
 
-- 然後開啟網頁進入 http://127.0.0.1:5000 即可開始與大毛互動。
+- 2. 開啟以下網頁進入,即可開始與大毛互動
+
+   http://127.0.0.1:5000 
 
