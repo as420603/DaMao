@@ -30,7 +30,7 @@ Da_Mao(大毛導覽員)
 
 - 5.進入專案資料夾並開啟終端機執行以下程式碼
 
-  ollama create Dig_Mao -f Modelfile
+  ollama create Da_Mao -f Modelfile
 
 
 
