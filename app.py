@@ -48,13 +48,13 @@ def process_audio():
         print("DaMao.py stderr:", result.stderr)
         
         if result.returncode == 0:
-            return jsonify({'message': '处理成功'}), 200
+            return jsonify({'message': '處理成功'}), 200
         else:
-            return jsonify({'error': '处理失败', 'details': result.stderr}), 500
+            return jsonify({'error': '處理失敗', 'details': result.stderr}), 500
 
     except Exception as e:
-        print(f"处理音频时出错: {e}")
-        return jsonify({'error': '服务器错误', 'details': str(e)}), 500
+        print(f"處理音頻錯誤: {e}")
+        return jsonify({'error': '服務器錯誤', 'details': str(e)}), 500
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -72,7 +72,7 @@ def upload_file():
     
     destination_path = os.path.join(DESTINATION_FOLDER, file.filename)
     
-    # 如果目标文件已存在，先删除
+    # 如果目標文件已存在，先删除
     if os.path.exists(destination_path):
         os.remove(destination_path)
 

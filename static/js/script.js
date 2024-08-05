@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         model2.position.set(app.renderer.width / 3, app.renderer.height / 2);
         model2.anchor.set(0.5, 0.5);
-        model2.scale.set(0.3);
+        model2.scale.set(0.8);
 
         playRecordingButton.disabled = false;
     })();

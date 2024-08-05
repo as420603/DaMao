@@ -6,6 +6,7 @@ body {
     justify-content: center; /* 水平置中 */
     align-items: center; /* 垂直置中 */
     height: 100vh; /* 高度佔滿視口 */
+    font-size: 16px; /* 基本字體大小 */
 }
 
 #canvas {
@@ -41,6 +42,7 @@ body {
     padding: 10px;
     margin-bottom: 10px;
     position: relative; /* 為了讓底部控制按鈕定位 */
+    font-size: 18px; /* 聊天室字體大小 */
 }
 
 #messages {
@@ -50,6 +52,7 @@ body {
     border-bottom: 1px solid #ccc;
     display: flex;
     flex-direction: column;
+    font-size: 30px; /* 調整消息字體大小 */
 }
 
 .message {
@@ -58,6 +61,7 @@ body {
     border-radius: 5px;
     max-width: 80%;
     clear: both;
+    font-size: 30px; /* 調整消息字體大小 */
 }
 
 .left {
@@ -83,7 +87,7 @@ body {
 button {
     background: none;
     border: none;
-    font-size: 24px; /* 調整圖示大小 */
+    font-size: 50px; /* 調整圖示大小 */
     cursor: pointer;
     color: black; /* 圖示顏色 */
     padding: 10px;

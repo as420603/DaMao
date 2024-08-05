@@ -9,7 +9,7 @@ TEMPLATE """{{- if .System }}
 <|assistant|>
 """
 
-PARAMETER temperature 0.7
+PARAMETER temperature 0.1
 PARAMETER num_ctx 8192
 PARAMETER stop "<|system|>"
 PARAMETER stop "<|user|>"
