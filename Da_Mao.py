@@ -28,12 +28,12 @@ def generate_tts(text, output_path):
 
 if __name__ == "__main__":
     # 指定要轉寫的音頻文件路徑
-    audio_file_path = r"D:\Project_AI\Whisper_Test\venv\final_project\audio_input\recording.wav"
+    audio_file_path = r"C:\Users\趙宸葳\Mybot2\DaMao\audio_input\recording.wav"
 
     # 設置輸出資料夾路徑
-    output_folder = r"D:\Project_AI\Whisper_Test\venv\final_project\audio_output"
-    RESPONSE_FILE_PATH = r"D:\Project_AI\Whisper_Test\venv\final_project\txt_to_TTS\Da_Mao_response.txt"
-    TRANSCRIPTION_FILE_PATH = r"D:\Project_AI\Whisper_Test\venv\final_project\txt_to_DaMao\transcription.txt"
+    output_folder = r"C:\Users\趙宸葳\Mybot2\DaMao\audio_output"
+    RESPONSE_FILE_PATH = r"C:\Users\趙宸葳\Mybot2\DaMao\txt_to_DaMao\transcription.txt"
+    TRANSCRIPTION_FILE_PATH = r"C:\Users\趙宸葳\Mybot2\DaMao\txt_to_TTS\Da_Mao_response.txt"
 
     if os.path.exists(audio_file_path):
         # 語音轉文字
@@ -47,7 +47,7 @@ if __name__ == "__main__":
         # 使用 Ollama 生成文本回覆
         try:
             response = ollama.chat(
-                model='Da_Mao:latest ', #指定我們訓練好的model_name 
+                model='Dig_Mao:latest ', #指定我們訓練好的model_name 
                 messages=[{'role': 'user', 'content': transcription}]
             )
             

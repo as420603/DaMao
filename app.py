@@ -2,18 +2,20 @@ import os
 import time
 import shutil
 import subprocess
+import ollama
 from flask import Flask, request, jsonify, send_from_directory, render_template
 from flask_cors import CORS
+
 # 初始化 Flask 應用
 app = Flask(__name__)
 CORS(app)
 
 # 設置檔案儲存路徑
 UPLOAD_FOLDER = 'uploads'
-DESTINATION_FOLDER = r"D:\Project_AI\Whisper_Test\venv\final_project\audio_input"
-AUDIO_OUTPUT_FOLDER = r"D:\Project_AI\Whisper_Test\venv\final_project\audio_output"
-TRANSCRIPTION_FILE_PATH = r"D:\Project_AI\Whisper_Test\venv\final_project\txt_to_DaMao\transcription.txt"
-RESPONSE_FILE_PATH = r"D:\Project_AI\Whisper_Test\venv\final_project\txt_to_TTS\Da_Mao_response.txt"
+DESTINATION_FOLDER = r"C:\Users\趙宸葳\Mybot2\DaMao\audio_input"
+AUDIO_OUTPUT_FOLDER = r"C:\Users\趙宸葳\Mybot2\DaMao\audio_output"
+TRANSCRIPTION_FILE_PATH = r"C:\Users\趙宸葳\Mybot2\DaMao\txt_to_DaMao\transcription.txt"
+RESPONSE_FILE_PATH = r"C:\Users\趙宸葳\Mybot2\DaMao\txt_to_TTS\Da_Mao_response.txt"
 
 # 創建目錄（如果不存在）
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -41,7 +43,7 @@ def index():
 def process_audio():
     """處理音頻的路由，執行指定的 Python 腳本並返回結果。"""
     try:
-        script_path = r"D:\Project_AI\Whisper_Test\venv\final_project\Da_Mao.py"
+        script_path = r"C:\Users\趙宸葳\Mybot2\DaMao\Da_Mao.py"
         result = subprocess.run(['python', script_path], capture_output=True, text=True)
         
         print("DaMao.py stdout:", result.stdout)
@@ -50,6 +52,7 @@ def process_audio():
         if result.returncode == 0:
             return jsonify({'message': '处理成功'}), 200
         else:
+            print(f"Script failed with return code {result.returncode}")
             return jsonify({'error': '处理失败', 'details': result.stderr}), 500
 
     except Exception as e:
@@ -107,6 +110,10 @@ def get_updates():
 def serve_audio(filename):
     """提供音頻檔案的路由，根據文件名從指定目錄返回音頻文件。"""
     return send_from_directory(AUDIO_OUTPUT_FOLDER, filename)
+
+@app.route('/static/<path:filename>')
+def static_files(filename):
+    return send_from_directory(os.path.join(app.root_path, 'static'), filename)
 
 if __name__ == '__main__':
     app.run(debug=True)
