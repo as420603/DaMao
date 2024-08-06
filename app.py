@@ -2,28 +2,24 @@ import os
 import time
 import shutil
 import subprocess
-import ollama
 from flask import Flask, request, jsonify, send_from_directory, render_template
 from flask_cors import CORS
-<<<<<<< HEAD
-=======
 
->>>>>>> ebc3186f4965fb3303dd2f0bd5c8093fda098c59
 # 初始化 Flask 應用
 app = Flask(__name__)
 CORS(app)
 
 # 設置檔案儲存路徑
 UPLOAD_FOLDER = 'uploads'
-DESTINATION_FOLDER = r"C:\Users\趙宸葳\Mybot2\DaMao\audio_input"
-AUDIO_OUTPUT_FOLDER = r"C:\Users\趙宸葳\Mybot2\DaMao\audio_output"
-TRANSCRIPTION_FILE_PATH = r"C:\Users\趙宸葳\Mybot2\DaMao\txt_to_DaMao\transcription.txt"
-RESPONSE_FILE_PATH = r"C:\Users\趙宸葳\Mybot2\DaMao\txt_to_TTS\Da_Mao_response.txt"
+DESTINATION_FOLDER = r"D:\Project_AI\Whisper_Test\venv\final_project\audio_input"
+AUDIO_OUTPUT_FOLDER = r"D:\Project_AI\Whisper_Test\venv\final_project\audio_output"
+TRANSCRIPTION_FILE_PATH = r"D:\Project_AI\Whisper_Test\venv\final_project\txt_to_DaMao\transcription.txt"
+RESPONSE_FILE_PATH = r"D:\Project_AI\Whisper_Test\venv\final_project\txt_to_TTS\Da_Mao_response.txt"
 
 # 創建目錄（如果不存在）
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-os.makedirs(DESTINATION_FOLDER, exist_ok=True)
-os.makedirs(AUDIO_OUTPUT_FOLDER, exist_ok=True)
+os.makedirs(os.path.dirname(DESTINATION_FOLDER), exist_ok=True)
+os.makedirs(os.path.dirname(AUDIO_OUTPUT_FOLDER), exist_ok=True)
 
 @app.route('/')
 def index():
@@ -46,24 +42,15 @@ def index():
 def process_audio():
     """處理音頻的路由，執行指定的 Python 腳本並返回結果。"""
     try:
-        script_path = r"C:\Users\趙宸葳\Mybot2\DaMao\Da_Mao.py"
+        script_path = r"D:\Project_AI\Whisper_Test\venv\final_project\Da_Mao.py"
         result = subprocess.run(['python', script_path], capture_output=True, text=True)
-        
-        print("DaMao.py stdout:", result.stdout)
-        print("DaMao.py stderr:", result.stderr)
         
         if result.returncode == 0:
             return jsonify({'message': '處理成功'}), 200
         else:
-<<<<<<< HEAD
             return jsonify({'error': '處理失敗', 'details': result.stderr}), 500
-=======
-            print(f"Script failed with return code {result.returncode}")
-            return jsonify({'error': '处理失败', 'details': result.stderr}), 500
->>>>>>> ebc3186f4965fb3303dd2f0bd5c8093fda098c59
 
     except Exception as e:
-        print(f"處理音頻錯誤: {e}")
         return jsonify({'error': '服務器錯誤', 'details': str(e)}), 500
 
 @app.route('/upload', methods=['POST'])

@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-<<<<<<< HEAD
+
     const cubism2Model = "https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/test/assets/shizuku/shizuku.model.json";
     let model2;
 
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         playRecordingButton.disabled = false;
     })();
-=======
+
     async function loadModel(modelName, position, scale) {
         try {
             // 销毁当前模型，若存在
@@ -138,14 +138,13 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('loading').innerText = '加载模型失败';
         }
     }
->>>>>>> ebc3186f4965fb3303dd2f0bd5c8093fda098c59
+
 
     function playAudio() {
         if (isRecording) return;
 
         stopAllAudio();
 
-        // 为了避免缓存问题，加入当前时间戳
         const timestamp = new Date().getTime();
         const audio_link = `/audio/response.mp3?t=${timestamp}`;
         
@@ -188,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         modelDaMaoButton.addEventListener('click', (event) => {
             event.stopPropagation();
-            loadModel('DaMao', { x: app.renderer.width / 3, y: app.renderer.height / 2 }, { x: 1, y: 1 });
+            loadModel('DaMao', { x: app.renderer.width / 3, y: app.renderer.height / 2 }, { x: 0.7, y: 0.7 });
         });
         modelErmaoButton.addEventListener('click', (event) => {
             event.stopPropagation();
@@ -204,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // 默认加载第一个模型
-        await loadModel('DaMao', { x: app.renderer.width / 3, y: app.renderer.height / 2 }, { x: 0.3, y: 0.3 });
+        await loadModel('DaMao', { x: app.renderer.width / 3, y: app.renderer.height / 2 }, { x: 0.7, y: 0.7 });
 
         playRecordingButton.disabled = false;
     })();
