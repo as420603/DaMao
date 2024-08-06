@@ -1,9 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // 取得 DOM 元素
     let recordButton = document.getElementById('recordButton');
     let stopButton = document.getElementById('stopButton');
     let playRecordingButton = document.getElementById('playRecordingButton');
     let modelDaMaoButton = document.getElementById('modelDaMao');
     let modelErmaoButton = document.getElementById('modelErmao');
+    
     let mediaRecorder;
     let audioChunks = [];
     let currentAudio = null;
@@ -11,26 +13,28 @@ document.addEventListener('DOMContentLoaded', () => {
     let isRecording = false;
     let modelDaMao = null;
     let modelErmao = null;
-    let currentModel = null; // 当前显示的模型
+    let currentModel = null; // 當前顯示的模型
     
-    // 模型路径
+    // 模型路徑
     const cubismModel =  {
         DaMao: 'static/model/shizuku/shizuku.model.json',
         Ermao: 'static/model/wanko/assets/wanko.model.json'
     };
 
+    // 獲取更新
     async function fetchUpdates() {
         try {
             let response = await fetch('/get_updates');
             let data = await response.json();
             document.getElementById('transcription_text').textContent = data.transcription_text;
             document.getElementById('response_text').textContent = data.response_text;
-            latestAudioUrl = data.audio_url;  // 获取最新的音频URL
+            latestAudioUrl = data.audio_url;  // 獲取最新的音頻 URL
         } catch (error) {
-            console.error('Error fetching updates:', error);
+            console.error('獲取更新錯誤:', error);
         }
     }
 
+    // 開始錄音
     async function startRecording() {
         stopAllAudio();
         if (isRecording) return;
@@ -54,13 +58,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 let processResponse = await fetch('/process_audio', { method: 'POST' });
                 if (processResponse.ok) {
-                    console.log('音频处理成功');
-                    await fetchUpdates(); // 确保在处理音频后获取最新更新
+                    console.log('音頻處理成功');
+                    await fetchUpdates(); // 確保在處理音頻後獲取最新更新
                 } else {
-                    alert('音频处理失败');
+                    alert('音頻處理失敗');
                 }
             } else {
-                alert('上传失败');
+                alert('上傳失敗');
             }
         };
 
@@ -70,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
         isRecording = true;
     }
 
+    // 停止錄音
     function stopRecording() {
         if (mediaRecorder) {
             mediaRecorder.stop();
@@ -79,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // 停止所有音頻
     function stopAllAudio() {
         if (isAudioPlaying && currentAudio) {
             currentAudio.pause();
@@ -90,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
+    // 加載模型
     const cubism2Model = "https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/test/assets/shizuku/shizuku.model.json";
     let model2;
 
@@ -111,35 +117,36 @@ document.addEventListener('DOMContentLoaded', () => {
         playRecordingButton.disabled = false;
     })();
 
+    // 加載指定模型
     async function loadModel(modelName, position, scale) {
         try {
-            // 销毁当前模型，若存在
+            // 銷毀當前模型（如果存在）
             if (currentModel) {
                 try {
                     app.stage.removeChild(currentModel);
                     currentModel.destroy({ children: true, texture: true, baseTexture: true });
                 } catch (e) {
-                    console.error('Error while destroying previous model:', e);
+                    console.error('銷毀先前模型時出錯:', e);
                 }
                 currentModel = null;
             }
     
-            // 加载新模型
+            // 加載新模型
             const modelPath = cubismModel[modelName];
             currentModel = await PIXI.live2d.Live2DModel.from(modelPath);
             currentModel.position.set(position.x, position.y);
-            currentModel.anchor.set(0.5, 0.5); // 中心对齐
+            currentModel.anchor.set(0.5, 0.5); // 中心對齊
             currentModel.scale.set(scale.x, scale.y);
             app.stage.addChild(currentModel);
     
-            console.log(`模型 ${modelPath} 加载成功`);
+            console.log(`模型 ${modelPath} 加載成功`);
         } catch (error) {
-            console.error(`加载模型 ${modelPath} 失败:`, error);
-            document.getElementById('loading').innerText = '加载模型失败';
+            console.error(`加載模型 ${modelPath} 失敗:`, error);
+            document.getElementById('loading').innerText = '加載模型失敗';
         }
     }
 
-
+    // 播放音頻
     function playAudio() {
         if (isRecording) return;
 
@@ -158,19 +165,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     expression: 3,
                     resetExpression: true,
                     crossOrigin: "anonymous"
-                }).catch(error => console.error('Failed to play audio:', error));
+                }).catch(error => console.error('播放音頻失敗:', error));
             }
-        }).catch(error => console.error('Failed to play audio:', error));
+        }).catch(error => console.error('播放音頻失敗:', error));
 
         currentAudio.onended = () => {
             isAudioPlaying = false;
         };
     }
 
+    // 播放錄音
     function playRecording() {
         playAudio();
     }
 
+    // 設置事件監聽器
     function setup() {
         recordButton.addEventListener('click', (event) => {
             event.stopPropagation();
@@ -195,6 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // 主函數
     (async function main() {
         window.app = new PIXI.Application({
             view: document.getElementById("canvas"),
@@ -202,13 +212,15 @@ document.addEventListener('DOMContentLoaded', () => {
             resizeTo: window
         });
 
-        // 默认加载第一个模型
+        // 默認加載第一個模型
         await loadModel('DaMao', { x: app.renderer.width / 3, y: app.renderer.height / 2 }, { x: 0.7, y: 0.7 });
 
         playRecordingButton.disabled = false;
     })();
 
+    // 定時獲取更新
     setInterval(fetchUpdates, 3000);
 
+    // 設置事件
     setup();
 });
