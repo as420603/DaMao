@@ -9,7 +9,11 @@ TEMPLATE """{{- if .System }}
 <|assistant|>
 """
 
+<<<<<<< HEAD
 PARAMETER temperature 0.1
+=======
+PARAMETER temperature 0.7
+>>>>>>> ebc3186f4965fb3303dd2f0bd5c8093fda098c59
 PARAMETER num_ctx 8192
 PARAMETER stop "<|system|>"
 PARAMETER stop "<|user|>"

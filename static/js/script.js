@@ -2,11 +2,22 @@ document.addEventListener('DOMContentLoaded', () => {
     let recordButton = document.getElementById('recordButton');
     let stopButton = document.getElementById('stopButton');
     let playRecordingButton = document.getElementById('playRecordingButton');
+    let modelDaMaoButton = document.getElementById('modelDaMao');
+    let modelErmaoButton = document.getElementById('modelErmao');
     let mediaRecorder;
     let audioChunks = [];
     let currentAudio = null;
     let isAudioPlaying = false;
     let isRecording = false;
+    let modelDaMao = null;
+    let modelErmao = null;
+    let currentModel = null; // 当前显示的模型
+    
+    // 模型路径
+    const cubismModel =  {
+        DaMao: 'static/model/shizuku/shizuku.model.json',
+        Ermao: 'static/model/wanko/assets/wanko.model.json'
+    };
 
     async function fetchUpdates() {
         try {
@@ -14,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let data = await response.json();
             document.getElementById('transcription_text').textContent = data.transcription_text;
             document.getElementById('response_text').textContent = data.response_text;
-            latestAudioUrl = data.audio_url;  // 獲取最新的音頻URL
+            latestAudioUrl = data.audio_url;  // 获取最新的音频URL
         } catch (error) {
             console.error('Error fetching updates:', error);
         }
@@ -43,13 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 let processResponse = await fetch('/process_audio', { method: 'POST' });
                 if (processResponse.ok) {
-                    console.log('音頻處理成功');
-                    await fetchUpdates(); // 確保在處理音頻後獲取最新更新
+                    console.log('音频处理成功');
+                    await fetchUpdates(); // 确保在处理音频后获取最新更新
                 } else {
-                    alert('音頻處理失敗');
+                    alert('音频处理失败');
                 }
             } else {
-                alert('上傳失敗');
+                alert('上传失败');
             }
         };
 
@@ -75,10 +86,11 @@ document.addEventListener('DOMContentLoaded', () => {
             currentAudio = null;
             isAudioPlaying = false;
 
-            if (model2) model2.stopSpeaking();
+            if (currentModel) currentModel.stopSpeaking();
         }
     }
 
+<<<<<<< HEAD
     const cubism2Model = "https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/test/assets/shizuku/shizuku.model.json";
     let model2;
 
@@ -98,13 +110,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
         playRecordingButton.disabled = false;
     })();
+=======
+    async function loadModel(modelName, position, scale) {
+        try {
+            // 销毁当前模型，若存在
+            if (currentModel) {
+                try {
+                    app.stage.removeChild(currentModel);
+                    currentModel.destroy({ children: true, texture: true, baseTexture: true });
+                } catch (e) {
+                    console.error('Error while destroying previous model:', e);
+                }
+                currentModel = null;
+            }
+    
+            // 加载新模型
+            const modelPath = cubismModel[modelName];
+            currentModel = await PIXI.live2d.Live2DModel.from(modelPath);
+            currentModel.position.set(position.x, position.y);
+            currentModel.anchor.set(0.5, 0.5); // 中心对齐
+            currentModel.scale.set(scale.x, scale.y);
+            app.stage.addChild(currentModel);
+    
+            console.log(`模型 ${modelPath} 加载成功`);
+        } catch (error) {
+            console.error(`加载模型 ${modelPath} 失败:`, error);
+            document.getElementById('loading').innerText = '加载模型失败';
+        }
+    }
+>>>>>>> ebc3186f4965fb3303dd2f0bd5c8093fda098c59
 
     function playAudio() {
         if (isRecording) return;
 
         stopAllAudio();
 
-        // 為了避免緩存問題，加入當前時間戳
+        // 为了避免缓存问题，加入当前时间戳
         const timestamp = new Date().getTime();
         const audio_link = `/audio/response.mp3?t=${timestamp}`;
         
@@ -112,12 +153,14 @@ document.addEventListener('DOMContentLoaded', () => {
         currentAudio.crossOrigin = "anonymous";
         currentAudio.play().then(() => {
             isAudioPlaying = true;
-            model2.speak(audio_link, {
-                volume: 1,
-                expression: 3,
-                resetExpression: true,
-                crossOrigin: "anonymous"
-            }).catch(error => console.error('Failed to play audio:', error));
+            if (currentModel) {
+                currentModel.speak(audio_link, {
+                    volume: 1,
+                    expression: 3,
+                    resetExpression: true,
+                    crossOrigin: "anonymous"
+                }).catch(error => console.error('Failed to play audio:', error));
+            }
         }).catch(error => console.error('Failed to play audio:', error));
 
         currentAudio.onended = () => {
@@ -142,7 +185,29 @@ document.addEventListener('DOMContentLoaded', () => {
             event.stopPropagation();
             playRecording();
         });
+
+        modelDaMaoButton.addEventListener('click', (event) => {
+            event.stopPropagation();
+            loadModel('DaMao', { x: app.renderer.width / 3, y: app.renderer.height / 2 }, { x: 1, y: 1 });
+        });
+        modelErmaoButton.addEventListener('click', (event) => {
+            event.stopPropagation();
+            loadModel('Ermao', { x: app.renderer.width / 3 -100, y: app.renderer.height / 2 + 900 }, { x: 0.8, y: 1 });
+        });
     }
+
+    (async function main() {
+        window.app = new PIXI.Application({
+            view: document.getElementById("canvas"),
+            autoStart: true,
+            resizeTo: window
+        });
+
+        // 默认加载第一个模型
+        await loadModel('DaMao', { x: app.renderer.width / 3, y: app.renderer.height / 2 }, { x: 0.3, y: 0.3 });
+
+        playRecordingButton.disabled = false;
+    })();
 
     setInterval(fetchUpdates, 3000);
 
